@@ -7,6 +7,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.text.Font;
 import models.Game;
 import models.Player;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -76,9 +77,11 @@ public class PlayerView {
     }
 
     /**
-     * Megjeleníti a dialog ablakokat.
+     * Megjeleníti a dialog ablakokat, ahol bekérésre kerülnek a két játékos
+     * neve, elindít egy új session-t és, ha játékos korábban játszott
+     * betölti a név alapján a győzelminek számát. {@link #setPlayers()} hívja meg.
      *
-     * @param str_plr melyik játékos adatait kéri be.
+     * @param str_plr {@code str_plr} melyik játékos adatait kéri be.
      */
     private void NameDialog(String str_plr) {
         TextInputDialog dialog = new TextInputDialog("Player");
@@ -90,6 +93,7 @@ public class PlayerView {
             if(str_plr.equals("P1")){
                 P1 = new Player(name, 0);
                 if(playerController.isNewPalyer(P1)){
+                    Logger.info("New player sign up.");
                     P1 = playerController.Load(P1);
                 } else {
                     try {
@@ -100,12 +104,13 @@ public class PlayerView {
                                         Player.class, PLAYERS)
                                         .stream().collect(Collectors.toList()),Player.class);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Logger.error("IO Exception:\t {}", e.getCause());
                     }
                 }
             } else {
                 P2 = new Player(name, 0);
                 if(playerController.isNewPalyer(P2)){
+                    Logger.info("New player sign up.");
                     P2 = playerController.Load(P2);
                 } else {
                     try {
@@ -116,7 +121,7 @@ public class PlayerView {
                                         Player.class, PLAYERS)
                                         .stream().collect(Collectors.toList()),Player.class);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Logger.error("IO Exception:\t {}", e.getCause());
                     }
                 }
             }
@@ -129,7 +134,7 @@ public class PlayerView {
                     gameDataController.GetAll(Game.class, GAMES)
                             .stream().collect(Collectors.toList()), Game.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error("IO Exception:\t {}", e.getCause());
         }
     }
 

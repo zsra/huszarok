@@ -3,6 +3,7 @@ package views;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import models.Player;
+import org.pmw.tinylog.Logger;
 
 /**
  * Játék üzenetek kezelése.
@@ -12,7 +13,7 @@ public class GameView {
     /**
      *  Ha valamelyik játékos nyer kap egy felugró ablakot, ami
      *  az aktuális játék végét jelenti.
-     * @param player Győztes játékos
+     * @param player {@code player} Győztes játékos
      */
     public void Win(Player player){
         SetDialog(player.getName() + " wins!");
@@ -22,9 +23,10 @@ public class GameView {
      *  A játék végét jelző dialogus ablak megjelenítésére szolgáló metódus
      *  győzelem és döntetlen esetén.
      *
-     * @param s Üzenet
+     * @param s {@code s} Üzenet
      */
     private void SetDialog(String s) {
+        Logger.info("Game end dialog called.");
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Game End");
         dialog.setHeaderText(s);

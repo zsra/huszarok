@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Player;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -20,9 +21,10 @@ public class StandingsController extends IOController {
 
     /**
      * Visszadja a TOP 5 játékos győzelmek szerint.
+     * {@inheritDoc}
      *
-     * @param typekey Az aktuálisan olvasott elemek osztálya.
-     * @param filename a json neve ahonnan olvas.
+     * @param typekey {@code typekey} Az aktuálisan olvasott elemek osztálya.
+     * @param filename {@code filename} a json neve ahonnan olvas.
      * @param <T> Player típus.
      * @return Visszaadja az 5 legjobb játékost.
      * @throws IOException ha nem találja a fájlt IO Exception dob.
@@ -34,10 +36,11 @@ public class StandingsController extends IOController {
 
     /**
      * Kiírja az 5 legjobb játékost.
+     * {@inheritDoc}
      *
-     * @param tmp A lista aminek az elemeivel felül lesz írva az állomány.
-     * @param filename a json neve ahova ír.
-     * @param typekey Az aktuálisan kiírt elemeknek osztálya.
+     * @param tmp {@code tmp} A lista aminek az elemeivel felül lesz írva az állomány.
+     * @param filename {@code filename} a json neve ahova ír.
+     * @param typekey {@code typekey} Az aktuálisan kiírt elemeknek osztálya.
      * @param <T> Player típus.
      * @throws IOException Ha nem találja a fájlt IO Exception dob.
      */
@@ -60,8 +63,9 @@ public class StandingsController extends IOController {
                     .limit(5)
                     .collect(Collectors.toList());
             WriteToJson(standings, STANDINGS, Player.class);
+            Logger.info("Standings updated.");
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error("IO Exception:\t {}", e.getCause());
         }
     }
 }

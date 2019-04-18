@@ -35,10 +35,10 @@ public class Game {
     /**
      * Új játék létrehozása a kostruktor meghívással.
      *
-     * @param player1 első játékos objektum.
-     * @param player2 második játékos objektum.
-     * @param player1_wins első játékos aktuális játékban elért győzelmei.
-     * @param player2_wins második játékos aktuális játékban elért győzelmei.
+     * @param player1 {@code player1} első játékos objektum.
+     * @param player2 {@code player2} második játékos objektum.
+     * @param player1_wins {@code player1_wins} első játékos aktuális játékban elért győzelmei.
+     * @param player2_wins {@code player2_wins} második játékos aktuális játékban elért győzelmei.
      */
     public Game(Player player1, Player player2, int player1_wins, int player2_wins) {
         this.player1 = player1;
@@ -72,7 +72,7 @@ public class Game {
     /**
      * Első játékos győzelmeinek számának növelése.
      *
-     * @param player1_wins új győzelem hozzáadása.
+     * @param player1_wins {@code player1_wins} új győzelem hozzáadása.
      */
     public void setPlayer1_wins(int player1_wins) {
         this.player1_wins = player1_wins;
@@ -88,7 +88,7 @@ public class Game {
     /**
      * Második játékos győzelmeinek számának növelése.
      *
-     * @param player2_wins új győzelem hozzáadása.
+     * @param player2_wins {@code player2_wins} új győzelem hozzáadása.
      */
     public void setPlayer2_wins(int player2_wins) {
         this.player2_wins = player2_wins;

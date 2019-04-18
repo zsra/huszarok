@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import models.Player;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +21,7 @@ public class StandingsView extends Button {
      * gyözelemmel rendelkező játékosokat csökkenő sorrendben.
      */
     public StandingsView(){
+        Logger.info("Standings dialog called.");
         this.setText("Standings");
         this.minHeight(40);
         this.minWidth(100);
@@ -42,7 +44,7 @@ public class StandingsView extends Button {
                                 dialog.getContentText()
                                         + "\n" + p.getName() + "\t" + p.getWins()));
             } catch (IOException e) {
-                e.printStackTrace();
+                Logger.error("IO Exception:\t {}", e.getCause());
             }
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
             dialog.showAndWait();

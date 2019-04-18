@@ -1,5 +1,6 @@
 package controllers;
 
+import org.pmw.tinylog.Logger;
 import views.GameView;
 import views.PlayerView;
 import views.TableView;
@@ -25,11 +26,13 @@ public class GameController {
     /**
      * Győzelem, akkor ha egy sorban egymás melett 5 azonos szín van,
      * ha 5 szín egymás alatt van vagy 5 szín átlósan helyezkedik el.
+     * Ha valaki győzőtt, akkor az {@link #Win()} metódus fut le.
      *
      * @return Ha valamelyik feltétel teljesül True-t add vissza, különben False-t.
      */
     public static boolean isWin(){
         if(onRow() || onDiagonal() || onCol()){
+            Logger.info("Somebody wins!");
             return true;
         }
         else return false;
@@ -52,6 +55,7 @@ public class GameController {
             P1.setWins(P1.getWins() + 1);
             playerController.Update(P1);
             gameView.Win(P1);
+            Logger.info("{} updated after the match.", P1.getName());
         }else {
             GameDataController.Session.setPlayer2_wins(
                     GameDataController.Session.getPlayer2_wins() + 1
@@ -59,18 +63,24 @@ public class GameController {
             P2.setWins(P2.getWins() + 1);
             playerController.Update(P2);
             gameView.Win(P2);
+            Logger.info("{} updated after the match.", P2.getName());
         }
         gameDataController.Update(GameDataController.Session);
         TableController.createController();
         TableView.refresh();
+        Logger.info("Table refreshed.");
         PlayerView playerView = new PlayerView();
         playerView.Update();
+        Logger.info("PlayerView refreshed.");
         StandingsController standingsController = new StandingsController();
         standingsController.Refresh();
+        Logger.info("Result refreshed.");
+
     }
 
     /**
-     * A döntetlen helyezetének felismerése.
+     * A döntetlen helyezetének felismerése. Ha döntetlen, akkor
+     * {@link #Draw()} metódus futt le.
      *
      * @return Ha döntetlen True, különben False.
      */
@@ -83,12 +93,14 @@ public class GameController {
             }
         }
         if(counter == 1){
+            Logger.info("Draw!");
             return true;
         }
         else if (counter > 1){
             return false;
         }
         else {
+            Logger.info("Draw!");
             return true;
         }
     }
@@ -100,8 +112,10 @@ public class GameController {
     public static void Draw(){
         TableController.createController();
         TableView.refresh();
+        Logger.info("Tableview updated.!");
         PlayerView playerView = new PlayerView();
         playerView.Update();
+        Logger.info("Playerview updated!");
         GameView gameView = new GameView();
         gameView.Draw();
     }
@@ -109,12 +123,13 @@ public class GameController {
     /**
      * Egy sor ellenőrzésének algoritmusa. Minden mezőhöz amelyik nem default szín
      * megnézi, hogy még 4 követi. (Sajnos végig megy a mátrixon).
+     * {@link #onRow()} segédmetódusa.
      *
-     * @param tmp elem érték aktuálisan.
-     * @param pkid játékos huszár azonosítója.
-     * @param pfid a játékos terület azonosítója.
-     * @param i az aktuálisan ellenőrzőtt elem sor indexe.
-     * @param j az aktuálisan ellenőrzőtt elem oszlop indexe.
+     * @param tmp <code>tmp</code> elem érték aktuálisan.
+     * @param pkid <code>pkid</code> játékos huszár azonosítója.
+     * @param pfid <code>pfid</code> a játékos terület azonosítója.
+     * @param i <code>i</code> az aktuálisan ellenőrzőtt elem sor indexe.
+     * @param j <code>j</code> az aktuálisan ellenőrzőtt elem oszlop indexe.
      * @return Ha feltételek teljesülnek True-t add vissza.
      */
     public static boolean onRowHelper(int tmp, int pkid, int pfid, int i, int j) {
@@ -126,7 +141,10 @@ public class GameController {
                             || Table[i][j + c] == pfid){
                         counter++;
                     } else break;
-                    if(counter == SIZE / 2) return true;
+                    if(counter == SIZE / 2){
+                        Logger.info("5 same color in one row.");
+                        return true;
+                    }
                 } catch (ArrayIndexOutOfBoundsException e){
                     break;
                 }
@@ -158,12 +176,13 @@ public class GameController {
     /**
      * Egy oszlop ellenőrzésének algoritmusa. Minden mezőhöz amelyik nem default szín
      * megnézi, hogy még 4 követi. (Sajnos végig megy a mátrixon).
+     * {@link #onCol()} segédmetódusa.
      *
-     * @param tmp elem érték aktuálisan.
-     * @param pkid játékos huszár azonosítója.
-     * @param pfid a játékos terület azonosítója.
-     * @param i az aktuálisan ellenőrzőtt elem sor indexe.
-     * @param j az aktuálisan ellenőrzőtt elem oszlop indexe.
+     * @param tmp <code>tmp</code> elem érték aktuálisan.
+     * @param pkid <code>pkid</code> játékos huszár azonosítója.
+     * @param pfid <code>pfid</code> a játékos terület azonosítója.
+     * @param i <code>i</code> az aktuálisan ellenőrzőtt elem sor indexe.
+     * @param j <code>j</code> az aktuálisan ellenőrzőtt elem oszlop indexe.
      * @return Ha feltételek teljesülnek True-t add vissza.
      */
     public static boolean onColHelper(int tmp, int pkid, int pfid, int i, int j) {
@@ -174,7 +193,10 @@ public class GameController {
                         || Table[i + c][j] == pfid){
                     counter++;
                 } else break;
-                if(counter == SIZE / 2) return true;
+                if(counter == SIZE / 2) {
+                    Logger.info("5 same color in one column.");
+                    return true;
+                }
             }
         }
         return false;
@@ -209,10 +231,12 @@ public class GameController {
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
 
-                if(onDiagonalHelper(i, j, P1_FIELD_ID, P1_KNIGHT_ID))
+                if(onDiagonalHelper(i, j, P1_FIELD_ID, P1_KNIGHT_ID)){
                     return true;
-                if(onDiagonalHelper(i, j, P2_FIELD_ID, P2_KNIGHT_ID))
+                }
+                if(onDiagonalHelper(i, j, P2_FIELD_ID, P2_KNIGHT_ID)){
                     return true;
+                }
             }
         }
         return false;
@@ -221,11 +245,12 @@ public class GameController {
     /**
      * Az átlóban ellenőrzésének algoritmusa. Minden mezőhöz amelyik nem default szín
      * megnézi, hogy még 4 követi. (Sajnos végig megy a mátrixon).
+     * {@link #onDiagonal()} segédmetódusa.
      *
-     * @param i az aktuálisan ellenőrzőtt elem sor indexe.
-     * @param j az aktuálisan ellenőrzőtt elem oszlop indexe.
-     * @param p2FieldId játékos terület azonosítója.
-     * @param p2KnightId a játékos huszár azonosítója.
+     * @param i <code>i</code> az aktuálisan ellenőrzőtt elem sor indexe.
+     * @param j <code>j</code> az aktuálisan ellenőrzőtt elem oszlop indexe.
+     * @param p2FieldId <code>p2FieldId</code> játékos terület azonosítója.
+     * @param p2KnightId <code>p2knightId</code> a játékos huszár azonosítója.
      * @return Ha feltételek teljesülnek True-t add vissza.
      */
     private static boolean onDiagonalHelper(int i, int j, int p2FieldId, int p2KnightId) {
@@ -255,6 +280,7 @@ public class GameController {
                 }
                 for (int co: counters) {
                     if(co == 5){
+                        Logger.info("5 same color in one diagonal.");
                         return true;
                     }
                 }

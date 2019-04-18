@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import interfaces.IIOController;
+import org.pmw.tinylog.Logger;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,8 +21,8 @@ public class IOController implements IIOController {
      * A paraméterben kapott helyen kiolvassa az összes megtalálható elemet az aktuális
      * Json-ben.
      *
-     * @param typekey Az aktuálisan olvasott elemek osztálya.
-     * @param filename a json neve ahonnan olvas.
+     * @param typekey {@code typekey} Az aktuálisan olvasott elemek osztálya.
+     * @param filename {@code filename} a json neve ahonnan olvas.
      * @param <T> a kapott lista elmeinek típusa.
      * @return Visszaadja a kiolvasott elemeket.
      * @throws IOException Ha nem létezik ez a File IOException dob.
@@ -39,16 +40,17 @@ public class IOController implements IIOController {
         }
         reader.endArray();
         reader.close();
+        Logger.info("Elements called from file.");
         return elements;
     }
 
     /**
      * Új elem hozzáadása a megfelelő Json-hoz.
      *
-     * @param element a kiírni kívánt elem.
-     * @param filename a json neve ahova ír.
-     * @param elements Az elemek listája amivel együtt ki lesz írva.
-     * @param typekey Az aktuálisan kiírt elemek osztálya.
+     * @param element {@code element} a kiírni kívánt elem.
+     * @param filename {@code filename} a json neve ahova ír.
+     * @param elements {@code elements} Az elemek listája amivel együtt ki lesz írva.
+     * @param typekey {@code typekey} Az aktuálisan kiírt elemek osztálya.
      * @param <T> a kiírandó elem típusa.
      * @throws IOException Ha nem létezik ez a File IOException dob.
      */
@@ -56,14 +58,15 @@ public class IOController implements IIOController {
         List<T> tmp = elements;
         tmp.add(element);
         WriteToJson(tmp, filename, typekey);
+        Logger.info("New element added to file.");
     }
 
     /**
      * Az írás metóduda. A kapott listával felülírja a Json-t.
      *
-     * @param tmp A lista aminek az elemeivel felül lesz írva az állomány.
-     * @param filename a json neve ahova ír.
-     * @param typekey Az aktuálisan kiírt elemeknek osztálya.
+     * @param tmp {@code tmp} A lista aminek az elemeivel felül lesz írva az állomány.
+     * @param filename {@code filename} a json neve ahova ír.
+     * @param typekey {@code typekey} Az aktuálisan kiírt elemeknek osztálya.
      * @param <T> a kiírandó elemek típusa.
      * @throws IOException Ha nem létezik ez a File IOException dob.
      */
@@ -77,5 +80,6 @@ public class IOController implements IIOController {
                 .forEach(element -> gson.toJson(element, typekey, writer));
         writer.endArray();
         writer.close();
+        Logger.info("Data has rewritten.");
     }
 }

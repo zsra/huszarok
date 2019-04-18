@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.almasb</groupId>
+    <groupId>zsra.beadando.228</groupId>
     <artifactId>huszarok</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
@@ -22,6 +22,13 @@
             <email>richard.zsupos@gmail.com</email>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/zsra/huszarok.git</connection>
+        <developerConnection>scm:git:https://github.com/zsra/huszarok.git</developerConnection>
+        <url>https://github.com/zsra/huszarok</url>
+        <tag>master</tag>
+    </scm>
 
     <profiles>
         <profile>
@@ -112,6 +119,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>11</version>
         </dependency>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog</artifactId>
+            <version>1.3.6</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -199,7 +211,6 @@
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <!-- select non-aggregate reports -->
                             <report>report</report>
                         </reports>
                     </reportSet>

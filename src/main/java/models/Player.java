@@ -26,8 +26,8 @@ public class Player {
     /**
      * Új játékos objektum létrehozzására vagy betöltés
      * utánra való tárolása.
-     * @param name A játékos egyedi neve.
-     * @param wins A játékos győzelmeinek száma, ha új a játétkos 0-at kap.
+     * @param name {@code name} A játékos egyedi neve.
+     * @param wins {@code wins} A játékos győzelmeinek száma, ha új a játétkos 0-at kap.
      */
     public Player(String name, int wins) {
         Name = name;
@@ -58,7 +58,7 @@ public class Player {
 
     /**
      * Ha játékos nyer, akkor nőveli a győzelmeinek számát.
-     * @param wins frissített győzelmeknek a száma.
+     * @param wins {@code wins} frissített győzelmeknek a száma.
      */
     public void setWins(int wins) {
         Wins = wins;

@@ -6,6 +6,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
+import org.pmw.tinylog.Logger;
 
 import static models.Table.*;
 import static controllers.TableController.*;
@@ -21,9 +22,11 @@ public class TableView {
     public static Label[][] fields = new Label[SIZE][SIZE];
 
     /**
-     * Inicializálja a labeleket.
+     * Inicializálja a labeleket. ID megadása, ami reprezentálja a
+     * {@link #fields} elfoglalt helyét. Ezenekívűl bordert állít.
      */
     public static void createView(){
+        Logger.info("View created.");
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
                 fields[i][j] = new Label("");
@@ -79,10 +82,11 @@ public class TableView {
     }
 
     /**
-     * A tábla bekockásítása.
+     * A tábla bekockásítása. Ha neutrális mező azonosítóval rendelkezik az adott
+     * label, akkor a táblában elfoglalt helynek megfelelő színt kap.
      *
-     * @param i sor index.
-     * @param j oszlop index.
+     * @param i {@code i} sor index.
+     * @param j {@code j} oszlop index.
      */
     private static void grid(int i, int j){
         if(i%2==0){

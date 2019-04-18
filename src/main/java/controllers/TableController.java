@@ -1,5 +1,7 @@
 package controllers;
 
+import org.pmw.tinylog.Logger;
+
 import static controllers.GameController.*;
 import static models.Table.*;
 
@@ -24,23 +26,26 @@ public class TableController {
                 Table[i][j] = NEUTRAL_ID;
             }
         }
+        Logger.info("Matrix filled by {}", NEUTRAL_ID);
     }
 
     /**
      * Elhelyezi a huszért körnek megfelelően.
      *
-     * @param i sor index.
-     * @param j oszlop index.
+     * @param i {@code i} sor index.
+     * @param j {@code j} index.
      */
     public static void place(int i, int j){
         if(Turn%2 == 0){
             if(Table[i][j] == NEUTRAL_ID){
                 Table[i][j] = P1_KNIGHT_ID;
+                Logger.info("First player placed his/her knight on the field.");
             }
         }
         else {
             if(Table[i][j] == NEUTRAL_ID){
                 Table[i][j] = P2_KNIGHT_ID;
+                Logger.info("Second player placed his/her knight on the field.");
             }
         }
     }
@@ -49,8 +54,8 @@ public class TableController {
      * Egy pozicóból kiszámolja a lehetséges lépés helyeket.
      * Ha nincs akkor a játékos veszít.
      *
-     * @param i sor index.
-     * @param j oszlop index.
+     * @param i {@code i} sor index.
+     * @param j {@code j} oszlop index.
      */
     public static void highlight(int i, int j){
         int counter = 0;
@@ -67,6 +72,7 @@ public class TableController {
             }
         }
         if(counter == 0){
+            Logger.info("One of the player couldn't move anymore!");
             Turn++;
             Win();
         }
@@ -76,20 +82,22 @@ public class TableController {
      * Azt vizsgálja, hogy
      * egy mező Highlighted azonosítóval van-e ellátva.
      *
-     * @param i sor inex.
-     * @param j oszlop index.
+     * @param i {@code i} sor inex.
+     * @param j {@code j} oszlop index.
      * @return Ha lpéhető mező True, különben False.
      */
     public static boolean isHighlighted(int i, int j){
-        if(Table[i][j] == HIGLIGHT_ID) return true;
+        if(Table[i][j] == HIGLIGHT_ID){
+            return true;
+        }
         else return false;
     }
 
     /**
      * Huszár áll-e azon a mezőn.
      *
-     * @param i sor index.
-     * @param j oszlop index.
+     * @param i {@code i} sor index.
+     * @param j {@code j} oszlop index.
      * @return ha huszár áll azon a mezőn True-t add vissza,
      * különben False-t.
      */
@@ -104,19 +112,21 @@ public class TableController {
      * Elmozdítja huszárt az eredi mezőjéről és áthelyi a
      * lekattintott mezőre.
      *
-     * @param old_i régi huszár sor index.
-     * @param old_j régi huszár oszlop index.
-     * @param new_i új huszár sor index.
-     * @param new_j új huszár oszlop index.
+     * @param old_i {@code old_i} régi huszár sor index.
+     * @param old_j {@code old_j} régi huszár oszlop index.
+     * @param new_i {@code new_i} új huszár sor index.
+     * @param new_j {@code new_j} új huszár oszlop index.
      */
     public static void move(int old_i, int old_j, int new_i, int new_j){
         if(Turn%2==0){
             Table[old_i][old_j] = P1_FIELD_ID;
             Table[new_i][new_j] = P1_KNIGHT_ID;
+            Logger.info("First player moved.");
         }
         else {
             Table[old_i][old_j] = P2_FIELD_ID;
             Table[new_i][new_j] = P2_KNIGHT_ID;
+            Logger.info("Second player moved.");
         }
         if(isWin()){
             Win();
@@ -140,6 +150,7 @@ public class TableController {
                 }
             }
         }
+        Logger.info("Turn end. All highlighted field become free.");
     }
 
 }

@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Game;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,8 +25,8 @@ public class GameDataController extends IOController {
     /**
      * Az összes eddig játszott játékok beolvasása.
      *
-     * @param typekey Az aktuálisan olvasott elemek osztálya.
-     * @param filename a json neve ahonnan olvas.
+     * @param typekey <code>typekey</code> Az aktuálisan olvasott elemek osztálya.
+     * @param filename <code>filename</code> a json neve ahonnan olvas.
      * @param <T> A beolvasott elemek típusa.
      * @return Vissaadja az összes eddig játszott játékok beolvasása.
      * @throws IOException Ha nem találja a fájlt IO Exception dob.
@@ -38,10 +39,10 @@ public class GameDataController extends IOController {
     /**
      *Új játék hozzáadása a korábban játszott játékokhoz.
      *
-     * @param element a kiírni kívánt elem.
-     * @param filename a json neve ahova ír.
-     * @param elements Az elemek listája amivel együtt ki lesz írva.
-     * @param typekey Az aktuálisan kiírt elemek osztálya.
+     * @param element {@code element} a kiírni kívánt elem.
+     * @param filename {@code filename} a json neve ahova ír.
+     * @param elements {@code elements} Az elemek listája amivel együtt ki lesz írva.
+     * @param typekey  {@code typkey} Az aktuálisan kiírt elemek osztálya.
      * @param <T> a kiírott adat típusa.
      * @throws IOException HA nem találja a fájlt IO Exception dob.
      */
@@ -53,7 +54,7 @@ public class GameDataController extends IOController {
     /**
      * Aaktuális játék során a győzelmek frissítése az adatok között.
      *
-     * @param game a játék amit update-lünk.
+     * @param game {@code game} a játék amit update-lünk.
      */
     public void Update(Game game) {
         try {
@@ -66,7 +67,7 @@ public class GameDataController extends IOController {
             WriteToJson(write, GAMES, Game.class);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error("IO Exception:\t {}", e.getCause());
         }
     }
 }

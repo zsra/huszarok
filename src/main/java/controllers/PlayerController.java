@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Player;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,9 +28,10 @@ public class PlayerController extends IOController {
 
     /**
      * A játékosok kiovasása {@value #PLAYERS}-ból.
+     * {@inheritDoc}
      *
-     * @param typekey Az aktuálisan olvasott elemek osztálya.
-     * @param filename a json neve ahonnan olvas.
+     * @param typekey {@code typekey} Az aktuálisan olvasott elemek osztálya.
+     * @param filename {@code filename} a json neve ahonnan olvas.
      * @param <T> a Player típus.
      * @return Visszaadja az összes játékost.
      * @throws IOException Ha nem találja a fájlt IO Exception dob.
@@ -41,11 +43,12 @@ public class PlayerController extends IOController {
 
     /**
      * Hozzáadd a korábbi játékosokhoz egy újat.
+     * {@inheritDoc}
      *
-     * @param element a kiírni kívánt elem.
-     * @param filename a json neve ahova ír.
-     * @param elements Az elemek listája amivel együtt ki lesz írva.
-     * @param typekey Az aktuálisan kiírt elemek osztálya.
+     * @param element {@code element} a kiírni kívánt elem.
+     * @param filename {@code filename} a json neve ahova ír.
+     * @param elements {@code elements} Az elemek listája amivel együtt ki lesz írva.
+     * @param typekey {@code typekey} Az aktuálisan kiírt elemek osztálya.
      * @param <T> a Player típus.
      * @throws IOException Ha nem találja a fájlt IO Exception dob.
      */
@@ -57,7 +60,7 @@ public class PlayerController extends IOController {
     /**
      * Egy játékos adatinak frissítése.
      *
-     * @param player a játékos akinek az adatai frissítve lesznek.
+     * @param player {@code player} a játékos akinek az adatai frissítve lesznek.
      */
     public void Update(Player player) {
         try {
@@ -65,12 +68,13 @@ public class PlayerController extends IOController {
             for(Player p : write){
                 if(p.getId().equals(player.getId())){
                     p = player;
+                    WriteToJson(write, PLAYERS, Player.class);
+                    Logger.info("{} updated.", player.getName());
                 }
             }
-            WriteToJson(write, PLAYERS, Player.class);
-
+            Logger.warn("Player not found!");
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error("IO Exception:\t {}", e.getCause());
         }
     }
 
@@ -78,7 +82,7 @@ public class PlayerController extends IOController {
      * Mini feature. Ha a játékos korábban játszott (név alapján),
      * akkor visszaadja a győzelmeit.
      *
-     * @param in_player az új játékos adati.
+     * @param in_player {@code in_player} az új játékos adati.
      * @return Ha név már szerepelt True, különben False.
      */
     public boolean isNewPalyer(Player in_player){
@@ -89,10 +93,11 @@ public class PlayerController extends IOController {
                     .filter(p -> p.getName().equals(in_player.getName()))
                     .limit(1).findFirst().orElse(null);
             if(tmp == null){
+                Logger.info("{} already played this game.", in_player.getName());
                 return false;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error("IO Exception:\t {}", e.getCause());
         }
         return true;
     }
@@ -100,7 +105,7 @@ public class PlayerController extends IOController {
     /**
      * Játékos betöltése.
      *
-     * @param player a játékos akinek az adati vissza lesznek töltve.
+     * @param player {@code player} a játékos akinek az adati vissza lesznek töltve.
      * @return Visszaaddja a játékost, ha szerepel.
      */
     public Player Load(Player player){
@@ -111,11 +116,13 @@ public class PlayerController extends IOController {
                     .filter(player1 -> player1.getId().equals(player.getId()))
                     .limit(1).findFirst().orElse(null);
             if(tmp != null){
+                Logger.info("{} wins reloaded.", tmp.getName());
                 return tmp;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error("IO Exception:\t {}", e.getCause());
         }
+        Logger.warn("Player not found!");
         return player;
     }
 }

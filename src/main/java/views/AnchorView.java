@@ -4,6 +4,9 @@ import controllers.TableController;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import org.pmw.tinylog.Logger;
+
+import java.util.logging.LoggingPermission;
 
 import static models.Table.*;
 import static controllers.GameController.*;
@@ -59,9 +62,10 @@ public class AnchorView extends AnchorPane {
      * Klikk esemény során lehívott metódus, ami elindítja
      * a háttérfolyamatokat.
      *
-     * @param t Click Event.
+     * @param t {@code t} Click Event.
      */
     private void move(javafx.scene.input.MouseEvent t) {
+        Logger.info("Clicked.");
         Label lab = (Label) t.getSource();
         int[] pos = getPosition(lab.getId());
         if(Turn == 0){
@@ -107,7 +111,7 @@ public class AnchorView extends AnchorPane {
      * Egy label Id-ből kiszámol egy poziciót. Az id megegyik
      * a mátrixban elfoglalt helyével.
      *
-     * @param id Label azonosító
+     * @param id {@code id} Label azonosító
      * @return visszadd egy tömböt, 0 indexen a sor indexet,
      * 1-es indexen az oszlop indexet.
      */
