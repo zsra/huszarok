@@ -92,17 +92,11 @@ public class GameController {
                     counter++;
             }
         }
-        if(counter == 1){
+        if(counter == 0) {
             Logger.info("Draw!");
             return true;
         }
-        else if (counter > 1){
-            return false;
-        }
-        else {
-            Logger.info("Draw!");
-            return true;
-        }
+        return false;
     }
 
     /**
@@ -132,7 +126,7 @@ public class GameController {
      * @param j <code>j</code> az aktuálisan ellenőrzőtt elem oszlop indexe.
      * @return Ha feltételek teljesülnek True-t add vissza.
      */
-    public static boolean onRowHelper(int tmp, int pkid, int pfid, int i, int j) {
+    private static boolean onRowHelper(int tmp, int pkid, int pfid, int i, int j) {
         int counter = 0;
         if(tmp == pkid|| tmp == pfid){
             for(int c = 0; c < SIZE / 2; c++){
@@ -185,7 +179,7 @@ public class GameController {
      * @param j <code>j</code> az aktuálisan ellenőrzőtt elem oszlop indexe.
      * @return Ha feltételek teljesülnek True-t add vissza.
      */
-    public static boolean onColHelper(int tmp, int pkid, int pfid, int i, int j) {
+    private static boolean onColHelper(int tmp, int pkid, int pfid, int i, int j) {
         int counter = 0;
         if(tmp == pkid|| tmp == pfid){
             for(int c = 0; c < SIZE / 2; c++){
