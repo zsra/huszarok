@@ -43,6 +43,8 @@ public class TableView {
     /**
      * Újraszámolja a színeket és a huszár poizicójáta belső mátrix
      * alapján.
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      */
     public static void refresh(Table table){
         int [][] tmp = table.getTable();
