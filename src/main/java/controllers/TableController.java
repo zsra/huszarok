@@ -20,7 +20,7 @@ public class TableController {
      * ráncigálva az egész kódon...
      */
     public void create(Table table){
-        int tmp [][] = new int[SIZE][SIZE];
+        int[][] tmp  = table.getTable();
         for(int i =0; i < SIZE; i++){
             for (int j =0; j < SIZE; j++){
                 tmp[i][j] = NEUTRAL_ID;
@@ -138,12 +138,12 @@ public class TableController {
     public void move(int old_i, int old_j, int new_i, int new_j, Table table){
         GameController gameController = new GameController();
         int[][] tmp = table.getTable();
-        if(Turn%2==0){
+        if(Turn%2 == 0){
             tmp[old_i][old_j] = P1_FIELD_ID;
             tmp[new_i][new_j] = P1_KNIGHT_ID;
             Logger.info("First player moved.");
         }
-        else {
+        else if(Turn%2 == 1) {
             tmp[old_i][old_j] = P2_FIELD_ID;
             tmp[new_i][new_j] = P2_KNIGHT_ID;
             Logger.info("Second player moved.");
