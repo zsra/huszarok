@@ -8,7 +8,7 @@ import static models.Table.*;
 
 /**
  *
- * Háttér mátriy ami alapján leképezi a View-t.
+ * Háttér mátrix ami alapján leképezi a View-t.
  */
 public class TableController {
 
@@ -46,7 +46,7 @@ public class TableController {
                 Logger.info("First player placed his/her knight on the field.");
             }
         }
-        else {
+        else if(Turn%2 == 1) {
             if(tmp[i][j] == NEUTRAL_ID){
                 tmp[i][j] = P2_KNIGHT_ID;
                 Logger.info("Second player placed his/her knight on the field.");
@@ -161,12 +161,13 @@ public class TableController {
     }
 
     /**
-     * Ha mozgítás bekövetkezett, akkor a megjelölt mezőket neutrálisra állítja,
-     * ha az highlited azonosítóval volt ellátva.
+     * Ha mozgatás bekövetkezett, akkor a megjelölt mezőket neutrálisra állítja,
+     * ha az highlited azonosítóval volt ellátva és nem lettek kiválasztva.
+     *
      * @param table {@code table} table objektum, ami végig van
      *                           ráncigálva az egész kódon...
      */
-    private void rehighlighted(Table table){
+    public void rehighlighted(Table table){
         int[][] tmp = table.getTable();
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
