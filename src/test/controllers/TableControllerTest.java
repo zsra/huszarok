@@ -30,6 +30,7 @@ class TableControllerTest {
 
     @Test
     void place() {
+        tableController.create(table);
         int i = 3;
         int j = 6;
         int Turn_tmp = GameController.Turn;
@@ -50,7 +51,6 @@ class TableControllerTest {
 
     @Test
     void highlight() {
-
         tableController.create(table);
         int[] x = {1, 1, -1, -1, 2, 2, -2, -2};
         int[] y = {2, -2, 2, -2, 1, -1, 1, -1};
@@ -71,6 +71,7 @@ class TableControllerTest {
 
     @Test
     void isHighlighted() {
+        tableController.create(table);
         int i = 5;
         int j = 5;
 
@@ -81,6 +82,7 @@ class TableControllerTest {
 
     @Test
     void rehighlighted() {
+        tableController.create(table);
         int[] indexes = { 1, 4 ,5, 2, 3};
         for(int i = 0; i < indexes.length; i++){
             table.getTable()[i][indexes.length - i] = HIGLIGHT_ID;
@@ -96,6 +98,7 @@ class TableControllerTest {
 
     @Test
     void isKnight() {
+        tableController.create(table);
         int i = 2;
         int j = 4;
         int Turn_tmp = GameController.Turn;
@@ -120,7 +123,7 @@ class TableControllerTest {
 
     @Test
     void move() {
-
+        tableController.create(table);
         int old_i = 4;
         int old_j = 8;
         int valid_new_i = 5;
