@@ -4,6 +4,7 @@ import controllers.TableController;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import models.Table;
 import org.pmw.tinylog.Logger;
 
 import java.util.logging.LoggingPermission;
@@ -36,8 +37,13 @@ public class AnchorView extends AnchorPane {
         this.minWidth(620);
         this.setStyle("-fx-background-color: \n" +
                 "#ececec");
-        TableController.createController();
-        TableView.createView();
+        TableController tableController = new TableController();
+
+        Table table = new Table();
+
+        tableController.create(table);
+
+        TableView.create();
 
         FlowPane pane = new FlowPane();
         pane.setStyle("-fx-min-height: 610; -fx-min-width: 610; -fx-padding: 10 0 0 10");
@@ -45,7 +51,7 @@ public class AnchorView extends AnchorPane {
 
         for(int i = 0; i < SIZE; i++){
             for(int j =0; j < SIZE; j++){
-                TableView.fields[i][j].setOnMouseClicked(t -> move(t));
+                TableView.fields[i][j].setOnMouseClicked(t -> move(t, table));
                 pane.getChildren().addAll(TableView.fields[i][j]);
             }
         }
@@ -64,47 +70,51 @@ public class AnchorView extends AnchorPane {
      *
      * @param t {@code t} Click Event.
      */
-    private void move(javafx.scene.input.MouseEvent t) {
+    private void move(javafx.scene.input.MouseEvent t, Table table) {
+        TableController controller = new TableController();
+
+        int[][] tmp = table.getTable();
+
         Logger.info("Clicked.");
         Label lab = (Label) t.getSource();
         int[] pos = getPosition(lab.getId());
+
         if(Turn == 0){
-            TableController.place(pos[0], pos[1]);
+            controller.place(pos[0], pos[1] ,table);
             Turn++;
         } else if(Turn == 1) {
-            TableController.place(pos[0], pos[1]);
+            controller.place(pos[0], pos[1], table);
             Turn++;
         }
         else {
             if(!isMoved){
-                if(TableController.isKnight(pos[0], pos[1])){
-                    if(TableController.Table[pos[0]][pos[1]] == P1_KNIGHT_ID
+                if(controller.isKnight(pos[0], pos[1],table)){
+                    if(tmp[pos[0]][pos[1]] == P1_KNIGHT_ID
                     && Turn%2 == 0){
                         isMoved = true;
-                        TableController.highlight(pos[0], pos[1]);
+                        controller.highlight(pos[0], pos[1], table);
                         oldknightPos[0] = pos[0];
                         oldknightPos[1] = pos[1];
-                        TableView.refresh();
-                    }else if(TableController.Table[pos[0]][pos[1]] == P2_KNIGHT_ID
+                        TableView.refresh(table);
+                    }else if(tmp[pos[0]][pos[1]] == P2_KNIGHT_ID
                             && Turn%2 != 0) {
                         isMoved = true;
-                        TableController.highlight(pos[0], pos[1]);
+                        controller.highlight(pos[0], pos[1], table);
                         oldknightPos[0] = pos[0];
                         oldknightPos[1] = pos[1];
-                        TableView.refresh();
+                        TableView.refresh(table);
                     }
                 }
             } else {
-                if(TableController.isHighlighted(pos[0], pos[1])){
-                    TableController.move(oldknightPos[0], oldknightPos[1],
-                    pos[0], pos[1]);
+                if(controller.isHighlighted(pos[0], pos[1], table)){
+                    controller.move(oldknightPos[0], oldknightPos[1],
+                    pos[0], pos[1], table);
                     isMoved = false;
                 }
 
             }
         }
-
-        TableView.refresh();
+        TableView.refresh(table);
     }
 
     /**

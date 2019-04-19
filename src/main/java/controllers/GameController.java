@@ -1,10 +1,12 @@
 package controllers;
 
+import models.Table;
 import org.pmw.tinylog.Logger;
 import views.GameView;
 import views.PlayerView;
 import views.TableView;
 
+import static controllers.GameDataController.*;
 import static controllers.PlayerController.P1;
 import static controllers.PlayerController.P2;
 import static controllers.TableController.*;
@@ -26,12 +28,14 @@ public class GameController {
     /**
      * Győzelem, akkor ha egy sorban egymás melett 5 azonos szín van,
      * ha 5 szín egymás alatt van vagy 5 szín átlósan helyezkedik el.
-     * Ha valaki győzőtt, akkor az {@link #Win()} metódus fut le.
+     * Ha valaki győzőtt, akkor az {@link #Win(Table)} metódus fut le.
      *
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      * @return Ha valamelyik feltétel teljesül True-t add vissza, különben False-t.
      */
-    public static boolean isWin(){
-        if(onRow() || onDiagonal() || onCol()){
+    public boolean isWin(Table table){
+        if(onRow(table) || onDiagonal(table) || onCol(table)){
             Logger.info("Somebody wins!");
             return true;
         }
@@ -43,52 +47,67 @@ public class GameController {
      * a játékos adatainál és mind a játék session-él. Majd reset-i a pályát és
      * a körök számát.
      * FONTOS! győzelem az is, ha a másik beszórítja magát.
+     *
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      */
-    public static void Win(){
+    public void Win(Table table){
+
         GameDataController gameDataController = new GameDataController();
         PlayerController playerController = new PlayerController();
+        TableController tableController = new TableController();
+        StandingsController standingsController = new StandingsController();
+
+        PlayerView playerView = new PlayerView();
         GameView gameView = new GameView();
+
         if(Turn%2 == 0){
-            GameDataController.Session.setPlayer1_wins(
-                    GameDataController.Session.getPlayer1_wins() + 1
+            Session.setPlayer1_wins(
+                    Session.getPlayer1_wins() + 1
             );
             P1.setWins(P1.getWins() + 1);
             playerController.Update(P1);
             gameView.Win(P1);
             Logger.info("{} updated after the match.", P1.getName());
-        }else {
-            GameDataController.Session.setPlayer2_wins(
-                    GameDataController.Session.getPlayer2_wins() + 1
+        } else {
+            Session.setPlayer2_wins(
+                    Session.getPlayer2_wins() + 1
             );
             P2.setWins(P2.getWins() + 1);
             playerController.Update(P2);
             gameView.Win(P2);
             Logger.info("{} updated after the match.", P2.getName());
         }
-        gameDataController.Update(GameDataController.Session);
-        TableController.createController();
-        TableView.refresh();
+
+        gameDataController.Update(Session);
+        tableController.create(table);
+
+        TableView.refresh(table);
         Logger.info("Table refreshed.");
-        PlayerView playerView = new PlayerView();
+
         playerView.Update();
         Logger.info("PlayerView refreshed.");
-        StandingsController standingsController = new StandingsController();
+
         standingsController.Refresh();
         Logger.info("Result refreshed.");
 
+        Turn = 0;
     }
 
     /**
      * A döntetlen helyezetének felismerése. Ha döntetlen, akkor
-     * {@link #Draw()} metódus futt le.
+     * {@link #Draw(Table)} metódus futt le.
      *
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      * @return Ha döntetlen True, különben False.
      */
-    public static boolean isDraw(){
+    public boolean isDraw(Table table){
+        int[][] tmp = table.getTable();
         int counter = 0;
         for(int i = 0; i < SIZE; i++){
             for(int j  =0; j < SIZE; j++){
-                if(Table[i][j] == NEUTRAL_ID)
+                if(tmp[i][j] == NEUTRAL_ID)
                     counter++;
             }
         }
@@ -102,37 +121,51 @@ public class GameController {
     /**
      * Ha már csak egy szabad mező marad az egyik játékosnak
      * (nem tudd lépni egyik sem többet) döntetlen hírdett.
+     *
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      */
-    public static void Draw(){
-        TableController.createController();
-        TableView.refresh();
-        Logger.info("Tableview updated.!");
+    public void Draw(Table table){
+        TableController tableController = new TableController();
+
         PlayerView playerView = new PlayerView();
+        GameView gameView = new GameView();
+
+        tableController.create(table);
+
+        TableView.refresh(table);
+        Logger.info("Tableview updated.!");
+
         playerView.Update();
         Logger.info("Playerview updated!");
-        GameView gameView = new GameView();
+
         gameView.Draw();
+        Turn = 0;
     }
 
     /**
      * Egy sor ellenőrzésének algoritmusa. Minden mezőhöz amelyik nem default szín
      * megnézi, hogy még 4 követi. (Sajnos végig megy a mátrixon).
-     * {@link #onRow()} segédmetódusa.
+     * {@link #onRow(Table)} segédmetódusa.
      *
      * @param tmp <code>tmp</code> elem érték aktuálisan.
      * @param pkid <code>pkid</code> játékos huszár azonosítója.
      * @param pfid <code>pfid</code> a játékos terület azonosítója.
      * @param i <code>i</code> az aktuálisan ellenőrzőtt elem sor indexe.
      * @param j <code>j</code> az aktuálisan ellenőrzőtt elem oszlop indexe.
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      * @return Ha feltételek teljesülnek True-t add vissza.
      */
-    private static boolean onRowHelper(int tmp, int pkid, int pfid, int i, int j) {
+    private boolean onRowHelper(int tmp, int pkid,
+                                       int pfid, int i, int j, Table table) {
+        int[][] tmp_m = table.getTable();
         int counter = 0;
         if(tmp == pkid|| tmp == pfid){
             for(int c = 0; c < SIZE / 2; c++){
                 try {
-                    if(Table[i][j + c] == pkid
-                            || Table[i][j + c] == pfid){
+                    if(tmp_m[i][j + c] == pkid
+                            || tmp_m[i][j + c] == pfid){
                         counter++;
                     } else break;
                     if(counter == SIZE / 2){
@@ -152,15 +185,18 @@ public class GameController {
      * Végig haladva a mátrixon miden ellemre egyesével (#sadface#) ellőrzni
      * a fetételeket. Ez a soron ellenőrzni.
      *
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      * @return Ha kigyült az 5 szín True-t add vissza, különben False.
      */
-    public static boolean onRow(){
+    public boolean onRow(Table table){
+        int[][] tmp_m = table.getTable();
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
-                int tmp = Table[i][j];
-                if(onRowHelper(tmp, P1_KNIGHT_ID, P1_FIELD_ID, i, j))
+                int tmp = tmp_m[i][j];
+                if(onRowHelper(tmp, P1_KNIGHT_ID, P1_FIELD_ID, i, j, table))
                     return true;
-                if(onRowHelper(tmp, P2_KNIGHT_ID, P2_FIELD_ID, i, j))
+                if(onRowHelper(tmp, P2_KNIGHT_ID, P2_FIELD_ID, i, j, table))
                     return true;
             }
         }
@@ -170,21 +206,26 @@ public class GameController {
     /**
      * Egy oszlop ellenőrzésének algoritmusa. Minden mezőhöz amelyik nem default szín
      * megnézi, hogy még 4 követi. (Sajnos végig megy a mátrixon).
-     * {@link #onCol()} segédmetódusa.
+     * {@link #onCol(Table)} segédmetódusa.
      *
      * @param tmp <code>tmp</code> elem érték aktuálisan.
      * @param pkid <code>pkid</code> játékos huszár azonosítója.
      * @param pfid <code>pfid</code> a játékos terület azonosítója.
      * @param i <code>i</code> az aktuálisan ellenőrzőtt elem sor indexe.
      * @param j <code>j</code> az aktuálisan ellenőrzőtt elem oszlop indexe.
+     *
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      * @return Ha feltételek teljesülnek True-t add vissza.
      */
-    private static boolean onColHelper(int tmp, int pkid, int pfid, int i, int j) {
+    private boolean onColHelper(int tmp, int pkid, int pfid,
+                                       int i, int j, Table table) {
+        int[][] tmp_m = table.getTable();
         int counter = 0;
         if(tmp == pkid|| tmp == pfid){
             for(int c = 0; c < SIZE / 2; c++){
-                if(Table[i + c][j] == pkid
-                        || Table[i + c][j] == pfid){
+                if(tmp_m[i + c][j] == pkid
+                        || tmp_m[i + c][j] == pfid){
                     counter++;
                 } else break;
                 if(counter == SIZE / 2) {
@@ -200,15 +241,18 @@ public class GameController {
      * Végig haladva a mátrixon miden ellemre egyesével (#sadface#) ellőrzni
      * a fetételeket. Ez az oszlopon ellenőrzni.
      *
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      * @return Ha kigyült az 5 szín True-t add vissza, különben False.
      */
-    public static boolean onCol(){
+    public boolean onCol(Table table){
+        int[][] tmp_m = table.getTable();
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
-                int tmp = Table[i][j];
-                if(onColHelper(tmp, P1_KNIGHT_ID, P1_FIELD_ID, i, j))
+                int tmp = tmp_m[i][j];
+                if(onColHelper(tmp, P1_KNIGHT_ID, P1_FIELD_ID, i, j, table))
                     return true;
-                if(onColHelper(tmp, P2_KNIGHT_ID, P2_FIELD_ID, i, j))
+                if(onColHelper(tmp, P2_KNIGHT_ID, P2_FIELD_ID, i, j, table))
                     return true;
             }
         }
@@ -219,16 +263,18 @@ public class GameController {
      * Végig haladva a mátrixon miden ellemre egyesével (#sadface#) ellőrzni
      * a fetételeket. Ez az átlókban ellenőrzni.
      *
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      * @return Ha kigyült az 5 szín True-t add vissza, különben False.
      */
-    public static boolean onDiagonal(){
+    public boolean onDiagonal(Table table){
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
 
-                if(onDiagonalHelper(i, j, P1_FIELD_ID, P1_KNIGHT_ID)){
+                if(onDiagonalHelper(i, j, P1_FIELD_ID, P1_KNIGHT_ID, table)){
                     return true;
                 }
-                if(onDiagonalHelper(i, j, P2_FIELD_ID, P2_KNIGHT_ID)){
+                if(onDiagonalHelper(i, j, P2_FIELD_ID, P2_KNIGHT_ID, table)){
                     return true;
                 }
             }
@@ -239,34 +285,38 @@ public class GameController {
     /**
      * Az átlóban ellenőrzésének algoritmusa. Minden mezőhöz amelyik nem default szín
      * megnézi, hogy még 4 követi. (Sajnos végig megy a mátrixon).
-     * {@link #onDiagonal()} segédmetódusa.
+     * {@link #onDiagonal(Table)} segédmetódusa.
      *
      * @param i <code>i</code> az aktuálisan ellenőrzőtt elem sor indexe.
      * @param j <code>j</code> az aktuálisan ellenőrzőtt elem oszlop indexe.
      * @param p2FieldId <code>p2FieldId</code> játékos terület azonosítója.
      * @param p2KnightId <code>p2knightId</code> a játékos huszár azonosítója.
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      * @return Ha feltételek teljesülnek True-t add vissza.
      */
-    private static boolean onDiagonalHelper(int i, int j, int p2FieldId, int p2KnightId) {
+    private boolean onDiagonalHelper(int i, int j, int p2FieldId,
+                                            int p2KnightId, Table table) {
+        int[][] tmp_m = table.getTable();
         int[] counters = { 0, 0, 0, 0};
-        if(Table[i][j] == p2FieldId
-                || Table[i][j] == p2KnightId){
+        if(tmp_m[i][j] == p2FieldId
+                || tmp_m[i][j] == p2KnightId){
             for(int c = 0; c < SIZE; c++){
                 try {
-                    if(Table[i + c][j + c] == p2KnightId ||
-                            Table[i + c][j + c] == p2FieldId){
+                    if(tmp_m[i + c][j + c] == p2KnightId ||
+                            tmp_m[i + c][j + c] == p2FieldId){
                         counters[0]++;
                     }
-                    if(Table[i - c][j + c] == p2KnightId ||
-                            Table[i - c][j + c] == p2FieldId){
+                    if(tmp_m[i - c][j + c] == p2KnightId ||
+                            tmp_m[i - c][j + c] == p2FieldId){
                         counters[1]++;
                     }
-                    if(Table[i + c][j - c] == p2KnightId ||
-                            Table[i + c][j - c] == p2FieldId){
+                    if(tmp_m[i + c][j - c] == p2KnightId ||
+                            tmp_m[i + c][j - c] == p2FieldId){
                         counters[2]++;
                     }
-                    if(Table[i - c][j - c] == p2KnightId ||
-                            Table[i - c][j - c] == p2FieldId){
+                    if(tmp_m[i - c][j - c] == p2KnightId ||
+                            tmp_m[i - c][j - c] == p2FieldId){
                         counters[3]++;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {

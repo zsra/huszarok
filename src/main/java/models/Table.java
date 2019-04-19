@@ -6,6 +6,30 @@ package models;
 public class Table {
 
     /**
+     * Mátrix amin a műveletek végrehajtásra kerülnek.
+     */
+    private int Table[][];
+
+    /**
+     *
+     * a belső mátrix visszaadása.
+     * @return visszadja a mátrixot.
+     */
+    public int[][] getTable() {
+        return Table;
+    }
+
+    /**
+     * Egy táblán közvetlenül nem végzünk müveletett, helyete új
+     * mátrixot hozunk létre amit itt állítunk be.
+     *
+     * @param table {@code table} módosítások utáni tábla.
+     */
+    public void setTable(int[][] table) {
+        Table = table;
+    }
+
+    /**
      * A mátrix mérete {@value #SIZE}.
      */
     public static final int SIZE = 10;
@@ -40,4 +64,11 @@ public class Table {
      */
     public static final int HIGLIGHT_ID = 5;
 
+    /**
+     * Új tábla objektum létrehozzása és a {@link #Table} deklarálása
+     * {@link #SIZE} méretekkel.
+      */
+    public Table() {
+        Table = new int[SIZE][SIZE];
+    }
 }

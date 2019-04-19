@@ -6,6 +6,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
+import models.Table;
 import org.pmw.tinylog.Logger;
 
 import static models.Table.*;
@@ -25,7 +26,7 @@ public class TableView {
      * Inicializálja a labeleket. ID megadása, ami reprezentálja a
      * {@link #fields} elfoglalt helyét. Ezenekívűl bordert állít.
      */
-    public static void createView(){
+    public static void create(){
         Logger.info("View created.");
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
@@ -43,10 +44,11 @@ public class TableView {
      * Újraszámolja a színeket és a huszár poizicójáta belső mátrix
      * alapján.
      */
-    public static void refresh(){
+    public static void refresh(Table table){
+        int [][] tmp = table.getTable();
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
-                switch (Table[i][j]){
+                switch (tmp[i][j]){
                     case P1_KNIGHT_ID : {
                         fields[i][j].setStyle("-fx-background-color: #7ab33a;" +
                                 "-fx-min-width: 60;-fx-min-height: 60; -fx-font-size: 35;");
