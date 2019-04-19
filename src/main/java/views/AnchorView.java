@@ -69,6 +69,8 @@ public class AnchorView extends AnchorPane {
      * a háttérfolyamatokat.
      *
      * @param t {@code t} Click Event.
+     * @param table {@code table} table objektum, ami végig van
+     *                           ráncigálva az egész kódon...
      */
     private void move(javafx.scene.input.MouseEvent t, Table table) {
         TableController controller = new TableController();
