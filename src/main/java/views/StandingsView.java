@@ -37,6 +37,7 @@ public class StandingsView extends Button {
             Dialog<Void> dialog = new Dialog<>();
             dialog.setTitle("Standings");
             dialog.setHeaderText("Player\tWins");
+            dialog.getDialogPane().setPrefSize(300,400);
             StandingsController standingsController
                     = new StandingsController();
             StandingsController standingsController1 = new StandingsController();
