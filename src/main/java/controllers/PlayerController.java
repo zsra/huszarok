@@ -4,6 +4,7 @@ import models.Player;
 import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,13 +65,15 @@ public class PlayerController extends IOController {
      */
     public void Update(Player player) {
         try {
-            List<Player> write = GetAll(Player.class, PLAYERS);
+            int counter = 0;
+            List<Player> write = (ArrayList) GetAll(Player.class, PLAYERS);
             for(Player p : write){
                 if(p.getId().equals(player.getId())){
-                    p = player;
+                    write.set(counter, player);
                     WriteToJson(write, PLAYERS, Player.class);
                     Logger.info("{} updated.", player.getName());
                 }
+                counter++;
             }
             Logger.warn("Player not found!");
         } catch (IOException e) {

@@ -62,17 +62,15 @@ public class GameController {
         GameView gameView = new GameView();
 
         if(Turn%2 == 0){
-            Session.setPlayer1_wins(
-                    Session.getPlayer1_wins() + 1
-            );
+            int p1w = Session.getPlayer1_wins();
+            Session.setPlayer1_wins(p1w + 1);
             P1.setWins(P1.getWins() + 1);
             playerController.Update(P1);
             gameView.Win(P1);
             Logger.info("{} updated after the match.", P1.getName());
         } else {
-            Session.setPlayer2_wins(
-                    Session.getPlayer2_wins() + 1
-            );
+            int p2w = Session.getPlayer2_wins();
+            Session.setPlayer2_wins(p2w + 1);
             P2.setWins(P2.getWins() + 1);
             playerController.Update(P2);
             gameView.Win(P2);
@@ -224,14 +222,19 @@ public class GameController {
         int counter = 0;
         if(tmp == pkid|| tmp == pfid){
             for(int c = 0; c < SIZE / 2; c++){
-                if(tmp_m[i + c][j] == pkid
-                        || tmp_m[i + c][j] == pfid){
-                    counter++;
-                } else break;
-                if(counter == SIZE / 2) {
-                    Logger.info("5 same color in one column.");
-                    return true;
+
+                try {
+                    if(tmp_m[i + c][j] == pkid
+                            || tmp_m[i + c][j] == pfid){
+                        counter++;
+                    } else break;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
                 }
+            }
+            if(counter == SIZE / 2) {
+                Logger.info("5 same color in one column.");
+                return true;
             }
         }
         return false;

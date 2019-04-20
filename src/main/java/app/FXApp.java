@@ -27,6 +27,7 @@ public class FXApp extends Application {
         Logger.info("AnchorPane added to Stage.");
         AnchorView root = new AnchorView();
         stage.setScene(new Scene(root, 840, 620));
+        stage.setTitle("huszarok");
         Logger.info("GUI loaded...");
         stage.show();
     }

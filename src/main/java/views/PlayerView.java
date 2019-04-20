@@ -124,18 +124,17 @@ public class PlayerView {
                         Logger.error("IO Exception:\t {}", e.getCause());
                     }
                 }
+                GameDataController.Session = new Game(P1, P2, 0, 0);
+                GameDataController gameDataController = new GameDataController();
+                try {
+                    gameDataController.New(GameDataController.Session, GAMES,
+                            gameDataController.GetAll(Game.class, GAMES)
+                                    .stream().collect(Collectors.toList()), Game.class);
+                } catch (IOException e) {
+                    Logger.error("IO Exception:\t {}", e.getCause());
+                }
             }
         });
-
-        GameDataController.Session = new Game(P1, P2, 0, 0);
-        GameDataController gameDataController = new GameDataController();
-        try {
-            gameDataController.New(GameDataController.Session, GAMES,
-                    gameDataController.GetAll(Game.class, GAMES)
-                            .stream().collect(Collectors.toList()), Game.class);
-        } catch (IOException e) {
-            Logger.error("IO Exception:\t {}", e.getCause());
-        }
     }
 
 

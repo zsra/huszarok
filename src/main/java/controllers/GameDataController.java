@@ -4,6 +4,7 @@ import models.Game;
 import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,11 +59,13 @@ public class GameDataController extends IOController {
      */
     public void Update(Game game) {
         try {
-            List<Game> write = GetAll(Game.class, GAMES);
+            List<Game> write = (ArrayList) GetAll(Game.class, GAMES);
+            int counter = 0;
             for(Game g : write){
                 if(g.getId().equals(game.getId())){
-                    g = game;
+                    write.set(counter, game);
                 }
+                counter++;
             }
             WriteToJson(write, GAMES, Game.class);
 
