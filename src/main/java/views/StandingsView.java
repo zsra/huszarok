@@ -4,6 +4,7 @@ import controllers.StandingsController;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import models.Player;
 import org.pmw.tinylog.Logger;
 
@@ -14,6 +15,11 @@ import java.util.List;
  * A standings nézetett kezeli.
  */
 public class StandingsView extends Button {
+
+    /**
+     * A top 5 játékost összegyűjtő string. 
+     */
+    public static String top = "";
 
     /**
      * Ha játékosok rákattintanak a standings gombra,
@@ -31,18 +37,20 @@ public class StandingsView extends Button {
             Dialog<Void> dialog = new Dialog<>();
             dialog.setTitle("Standings");
             dialog.setHeaderText("Player\tWins");
-            dialog.setContentText(" ");
             StandingsController standingsController
                     = new StandingsController();
             StandingsController standingsController1 = new StandingsController();
             standingsController.Refresh();
             try {
+                top = "";
                 List<Player> players = standingsController.GetAll(Player.class,
                         StandingsController.STANDINGS);
-                players.stream().limit(5).forEach(p ->
-                        dialog.setContentText(
-                                dialog.getContentText()
-                                        + "\n" + p.getName() + "\t" + p.getWins()));
+                players.stream().limit(5).forEach(p -> {
+                     top += (p.getName() + "\t" + "  " + p.getWins() + "\n");
+
+                });
+                dialog.getDialogPane().setContent(
+                        new Label(top));
             } catch (IOException e) {
                 Logger.error("IO Exception:\t {}", e.getCause());
             }
