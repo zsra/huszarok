@@ -50,11 +50,12 @@ public class StandingsView extends Button {
                      top += (p.getName() + "\t" + "  " + p.getWins() + "\n");
 
                 });
-                dialog.getDialogPane().setContent(
-                        new Label(top));
+
             } catch (IOException e) {
                 Logger.error("IO Exception:\t {}", e.getCause());
             }
+            dialog.getDialogPane().setContent(
+                    new Label("" + top));
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
             dialog.showAndWait();
             dialog.close();

@@ -92,8 +92,8 @@ public class PlayerView {
         result.ifPresent(name -> {
             if(str_plr.equals("P1")){
                 P1 = new Player(name, 0);
-                if(playerController.isNewPalyer(P1)){
-                    Logger.info("New player sign up.");
+                if(!playerController.isNewPalyer(P1)){
+                    Logger.info("already sign up.");
                     P1 = playerController.Load(P1);
                 } else {
                     try {
@@ -109,8 +109,8 @@ public class PlayerView {
                 }
             } else {
                 P2 = new Player(name, 0);
-                if(playerController.isNewPalyer(P2)){
-                    Logger.info("New player sign up.");
+                if(!playerController.isNewPalyer(P2)){
+                    Logger.info("already sign up.");
                     P2 = playerController.Load(P2);
                 } else {
                     try {
