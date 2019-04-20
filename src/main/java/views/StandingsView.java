@@ -17,7 +17,7 @@ import java.util.List;
 public class StandingsView extends Button {
 
     /**
-     * A top 5 játékost összegyűjtő string. 
+     * A top 5 játékost összegyűjtő string.
      */
     public static String top = "";
 

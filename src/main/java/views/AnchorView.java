@@ -36,7 +36,7 @@ public class AnchorView extends AnchorPane {
         this.minHeight(840);
         this.minWidth(620);
         this.setStyle("-fx-background-color: \n" +
-                "#ececec");
+                "#c9c9c9");
         TableController tableController = new TableController();
 
         Table table = new Table();
