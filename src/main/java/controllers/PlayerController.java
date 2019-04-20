@@ -97,12 +97,12 @@ public class PlayerController extends IOController {
                     .limit(1).findFirst().orElse(null);
             if(tmp == null){
                 Logger.info("{} already played this game.", in_player.getName());
-                return false;
+                return true;
             }
         } catch (IOException e) {
             Logger.error("IO Exception:\t {}", e.getCause());
         }
-        return true;
+        return false;
     }
 
     /**

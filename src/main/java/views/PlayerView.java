@@ -92,10 +92,8 @@ public class PlayerView {
         result.ifPresent(name -> {
             if(str_plr.equals("P1")){
                 P1 = new Player(name, 0);
-                if(!playerController.isNewPalyer(P1)){
-                    Logger.info("already sign up.");
-                    P1 = playerController.Load(P1);
-                } else {
+                if(playerController.isNewPalyer(P1)){
+                    Logger.info("New Player.");
                     try {
                         playerController.New(
                                 P1,
@@ -106,13 +104,14 @@ public class PlayerView {
                     } catch (IOException e) {
                         Logger.error("IO Exception:\t {}", e.getCause());
                     }
+
+                } else {
+                    P1 = playerController.Load(P1);
                 }
             } else {
                 P2 = new Player(name, 0);
-                if(!playerController.isNewPalyer(P2)){
-                    Logger.info("already sign up.");
-                    P2 = playerController.Load(P2);
-                } else {
+                if(playerController.isNewPalyer(P2)){
+                    Logger.info("New Player.");
                     try {
                         playerController.New(
                                 P2,
@@ -123,6 +122,10 @@ public class PlayerView {
                     } catch (IOException e) {
                         Logger.error("IO Exception:\t {}", e.getCause());
                     }
+
+                } else {
+
+                    P2 = playerController.Load(P2);
                 }
                 GameDataController.Session = new Game(P1, P2, 0, 0);
                 GameDataController gameDataController = new GameDataController();
