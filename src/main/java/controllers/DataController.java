@@ -108,7 +108,7 @@ public class DataController {
      * Ha az aktuális játék állása megváltozik újra lesz írva a z értékei a
      * {@link #GAMES}.
      *
-     * @param game
+     * @param game aktuális játék frissítése.
      */
     public void Update(Game game){
         List<Game> tmp_games = (ArrayList) this.getGames();

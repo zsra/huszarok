@@ -38,7 +38,7 @@ public class StandingsController {
     /**
      * Új listát állít be, ha megváltozna a tárolt adatok.
      *
-     * @param players új lsita.
+     * @param players új lista.
      */
     private void setPlayers(List<Player> players) {
         this.players = players;
