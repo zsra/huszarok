@@ -4,7 +4,6 @@
  *  <ul>
  *      <li>app</li>
  *      <li>controllers</li>
- *      <li>interfaces</li>
  *      <li>models</li>
  *      <li>views</li>
  *  </ul>

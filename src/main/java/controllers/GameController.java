@@ -6,10 +6,9 @@ import views.GameView;
 import views.PlayerView;
 import views.TableView;
 
-import static controllers.GameDataController.*;
+import static controllers.DataController.Session;
 import static controllers.PlayerController.P1;
 import static controllers.PlayerController.P2;
-import static controllers.TableController.*;
 import static models.Table.*;
 
 /**
@@ -53,7 +52,7 @@ public class GameController {
      */
     public void Win(Table table){
 
-        GameDataController gameDataController = new GameDataController();
+        DataController gameDataController = new DataController();
         PlayerController playerController = new PlayerController();
         TableController tableController = new TableController();
         StandingsController standingsController = new StandingsController();
@@ -86,7 +85,7 @@ public class GameController {
         playerView.Update();
         Logger.info("PlayerView refreshed.");
 
-        standingsController.Refresh();
+        standingsController.Update();
         Logger.info("Result refreshed.");
 
         Turn = 0;

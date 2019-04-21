@@ -1,6 +1,6 @@
 package views;
 
-import controllers.GameDataController;
+import controllers.DataController;
 import controllers.PlayerController;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
@@ -9,14 +9,10 @@ import models.Game;
 import models.Player;
 import org.pmw.tinylog.Logger;
 
-import java.io.IOException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static controllers.GameDataController.GAMES;
 import static controllers.PlayerController.P1;
 import static controllers.PlayerController.P2;
-import static controllers.PlayerController.PLAYERS;
 
 /**
  * Játékos adatainak bekérése és megjelenítése a GUI-n.
@@ -92,50 +88,25 @@ public class PlayerView {
         result.ifPresent(name -> {
             if(str_plr.equals("P1")){
                 P1 = new Player(name, 0);
-                if(playerController.isNewPalyer(P1)){
+                if(playerController.isNewPlayer(P1)){
                     Logger.info("New Player.");
-                    try {
-                        playerController.New(
-                                P1,
-                                PLAYERS,
-                                playerController.GetAll(
-                                        Player.class, PLAYERS)
-                                        .stream().collect(Collectors.toList()),Player.class);
-                    } catch (IOException e) {
-                        Logger.error("IO Exception:\t {}", e.getCause());
-                    }
+                    playerController.New(P1);
 
                 } else {
                     P1 = playerController.Load(P1);
                 }
             } else {
                 P2 = new Player(name, 0);
-                if(playerController.isNewPalyer(P2)){
+                if(playerController.isNewPlayer(P2)){
                     Logger.info("New Player.");
-                    try {
-                        playerController.New(
-                                P2,
-                                PLAYERS,
-                                playerController.GetAll(
-                                        Player.class, PLAYERS)
-                                        .stream().collect(Collectors.toList()),Player.class);
-                    } catch (IOException e) {
-                        Logger.error("IO Exception:\t {}", e.getCause());
-                    }
+                    playerController.New(P2);
 
                 } else {
-
                     P2 = playerController.Load(P2);
                 }
-                GameDataController.Session = new Game(P1, P2, 0, 0);
-                GameDataController gameDataController = new GameDataController();
-                try {
-                    gameDataController.New(GameDataController.Session, GAMES,
-                            gameDataController.GetAll(Game.class, GAMES)
-                                    .stream().collect(Collectors.toList()), Game.class);
-                } catch (IOException e) {
-                    Logger.error("IO Exception:\t {}", e.getCause());
-                }
+                DataController.Session = new Game(P1, P2, 0, 0);
+                DataController gameDataController = new DataController();
+                gameDataController.New(DataController.Session);
             }
         });
     }
@@ -155,7 +126,7 @@ public class PlayerView {
      * Frissíti az állást.
      */
     public void Update(){
-        Stat.setText(GameDataController.Session.getPlayer1_wins()
-                + " - "+ GameDataController.Session.getPlayer2_wins());
+        Stat.setText(DataController.Session.getPlayer1_wins()
+                + " - "+ DataController.Session.getPlayer2_wins());
     }
 }

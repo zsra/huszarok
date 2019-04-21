@@ -1,9 +1,16 @@
 package controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonWriter;
 import models.Player;
 import org.pmw.tinylog.Logger;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +19,7 @@ import java.util.stream.Collectors;
  *
  * TOP 5 jáétkosnak a kezelése.
  */
-public class StandingsController extends IOController {
+public class StandingsController {
 
     /**
      * Top 5 játékos győzelmek szerint rendezve és beírva.
@@ -20,52 +27,81 @@ public class StandingsController extends IOController {
     public static final String STANDINGS = "top.json";
 
     /**
-     * Visszadja a TOP 5 játékos győzelmek szerint.
-     * {@inheritDoc}
+     * Visszaadja a top 5 játékost.
      *
-     * @param typekey {@code typekey} Az aktuálisan olvasott elemek osztálya.
-     * @param filename {@code filename} a json neve ahonnan olvas.
-     * @param <T> Player típus.
-     * @return Visszaadja az 5 legjobb játékost.
-     * @throws IOException ha nem találja a fájlt IO Exception dob.
+     * @return Visszaadja a top 5 játékost.
      */
-    @Override
-    public <T> List<T> GetAll(Class<?> typekey, String filename) throws IOException {
-        return super.GetAll(typekey, filename);
+    public List<Player> getPlayers() {
+        return players;
     }
 
     /**
-     * Kiírja az 5 legjobb játékost.
-     * {@inheritDoc}
+     * Új listát állít be, ha megváltozna a tárolt adatok.
      *
-     * @param tmp {@code tmp} A lista aminek az elemeivel felül lesz írva az állomány.
-     * @param filename {@code filename} a json neve ahova ír.
-     * @param typekey {@code typekey} Az aktuálisan kiírt elemeknek osztálya.
-     * @param <T> Player típus.
-     * @throws IOException Ha nem találja a fájlt IO Exception dob.
+     * @param players új lsita.
      */
-    @Override
-    public <T> void WriteToJson(List<T> tmp, String filename, Class<?> typekey) throws IOException {
-        super.WriteToJson(tmp, filename, typekey);
+    private void setPlayers(List<Player> players) {
+        this.players = players;
     }
 
     /**
-     * Frissíti az 5 legjobb játékosoknak a listáját.
+     * top 5 játékost tároló konténer.
      */
-    public void Refresh(){
+    private List<Player> players;
+
+    /**
+     * Új objektum léterehozása után, {@link #StandingsController(InputStream)}
+     * új folyam indítása a resource olvasásnál.
+     */
+    public StandingsController(){
+        this(StandingsController.class.getResourceAsStream(STANDINGS));
+    }
+
+    /**
+     * Kiolvassa a resource-ből az adatokat, új objektum létrehozzása után.
+     *
+     * @param is új folyam.
+     */
+    private StandingsController(InputStream is){
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Player>>(){}.getType();
+        this.players =gson.fromJson(new InputStreamReader(is),type);
+    }
+
+    /**
+     * Kiszedi a top 5 játékost a players.json-ből
+     */
+    public void Update(){
+        PlayerController controller = new PlayerController();
+        List<Player> top = controller.getPlayers()
+                .stream()
+                .sorted(Comparator.comparingInt(Player::getWins).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+        this.setPlayers(top);
+        Write();
+    }
+
+    /**
+     * Újra kiírja a listát a korábbi helyre.
+     *
+     */
+    private void Write(){
         try {
-            PlayerController playerController = new PlayerController();
-            List<Player> players = playerController.GetAll(Player.class,
-                    PlayerController.PLAYERS);
-            List<Player> standings = players
-                    .stream()
-                    .sorted(Comparator.comparingInt(Player::getWins).reversed())
-                    .limit(5)
-                    .collect(Collectors.toList());
-            WriteToJson(standings, STANDINGS, Player.class);
-            Logger.info("Standings updated.");
-        } catch (IOException e) {
+            Gson gson = new Gson();
+            JsonWriter writer = new JsonWriter(
+                    new FileWriter("target/classes/controllers/" + STANDINGS));
+            writer.setIndent("  ");
+            writer.beginArray();
+            this.getPlayers().stream()
+                    .forEach(element -> gson.toJson(element, Player.class ,writer));
+            writer.endArray();
+            writer.close();
+            Logger.info("Data has rewritten.");
+        } catch (IOException e){
             Logger.error("IO Exception:\t {}", e.getCause());
         }
+
     }
+
 }

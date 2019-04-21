@@ -1,16 +1,23 @@
 package controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonWriter;
 import models.Player;
 import org.pmw.tinylog.Logger;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Játékosok kezelése.
  */
-public class PlayerController extends IOController {
+public class PlayerController {
 
     /**
      * A játékosok akik játszottak {@value #PLAYERS}-be lesznek mentve.
@@ -28,104 +35,131 @@ public class PlayerController extends IOController {
     public static Player P2;
 
     /**
-     * A játékosok kiovasása {@value #PLAYERS}-ból.
-     * {@inheritDoc}
+     * Visszaadja az összes játékost akik korábban játszott.
      *
-     * @param typekey {@code typekey} Az aktuálisan olvasott elemek osztálya.
-     * @param filename {@code filename} a json neve ahonnan olvas.
-     * @param <T> a Player típus.
-     * @return Visszaadja az összes játékost.
-     * @throws IOException Ha nem találja a fájlt IO Exception dob.
+     * @return Visszaadja az összes játékost akik korábban játszott.
      */
-    @Override
-    public <T> List<T> GetAll(Class<?> typekey, String filename) throws IOException {
-        return super.GetAll(typekey, filename);
+    public List<Player> getPlayers() {
+        return players;
     }
 
     /**
-     * Hozzáadd a korábbi játékosokhoz egy újat.
-     * {@inheritDoc}
+     * Új listát állít be, ha megváltozna a tárolt adatok.
      *
-     * @param element {@code element} a kiírni kívánt elem.
-     * @param filename {@code filename} a json neve ahova ír.
-     * @param elements {@code elements} Az elemek listája amivel együtt ki lesz írva.
-     * @param typekey {@code typekey} Az aktuálisan kiírt elemek osztálya.
-     * @param <T> a Player típus.
-     * @throws IOException Ha nem találja a fájlt IO Exception dob.
+     * @param players új lsita.
      */
-    @Override
-    public <T> void New(T element, String filename, List<T> elements, Class<?> typekey) throws IOException {
-        super.New(element, filename, elements, typekey);
+    private void setPlayers(List<Player> players) {
+        this.players = players;
     }
 
     /**
-     * Egy játékos adatinak frissítése.
-     *
-     * @param player {@code player} a játékos akinek az adatai frissítve lesznek.
+     * Játékos konténer.
      */
-    public void Update(Player player) {
-        try {
-            int counter = 0;
-            List<Player> write = (ArrayList) GetAll(Player.class, PLAYERS);
-            for(Player p : write){
-                if(p.getId().equals(player.getId())){
-                    write.set(counter, player);
-                    WriteToJson(write, PLAYERS, Player.class);
-                    Logger.info("{} updated.", player.getName());
-                }
-                counter++;
-            }
-            Logger.warn("Player not found!");
-        } catch (IOException e) {
-            Logger.error("IO Exception:\t {}", e.getCause());
+    private List<Player> players;
+
+    /**
+     * Új objektum léterehozása után, {@link #PlayerController(InputStream)}
+     * új folyam indítása a resource olvasásnál.
+     */
+    public PlayerController(){
+        this(PlayerController.class.getResourceAsStream(PLAYERS));
+    }
+
+    /**
+     * Kiolvassa a {@link #PLAYERS}-ből a játékosokat.
+     *
+     * @param is új folyam.
+     */
+    private PlayerController(InputStream is){
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Player>>(){}.getType();
+        this.players =gson.fromJson(new InputStreamReader(is),type);
+    }
+
+    /**
+     * Ellenőrzi, hogy a játékos korábban játszott.
+     *
+     * @param player a játékos aki ellenőrízve lesz.
+     * @return ha játsoztt True-t add vissza, különben False.
+     */
+    public boolean isNewPlayer(Player player){
+        Player result = this.getPlayers().stream()
+                .filter(player1 -> player1.getId().equals(player.getId()))
+                .findFirst().orElse(null);
+        if (result == null){
+            return true;
         }
-    }
 
-    /**
-     * Mini feature. Ha a játékos korábban játszott (név alapján),
-     * akkor visszaadja a győzelmeit.
-     *
-     * @param in_player {@code in_player} az új játékos adati.
-     * @return Ha név már szerepelt True, különben False.
-     */
-    public boolean isNewPalyer(Player in_player){
-        PlayerController controller = new PlayerController();
-        try {
-            List<Player> players = controller.GetAll(Player.class, PLAYERS);
-            Player tmp = players.stream()
-                    .filter(p -> p.getName().equals(in_player.getName()))
-                    .limit(1).findFirst().orElse(null);
-            if(tmp == null){
-                Logger.info("{} already played this game.", in_player.getName());
-                return true;
-            }
-        } catch (IOException e) {
-            Logger.error("IO Exception:\t {}", e.getCause());
-        }
         return false;
     }
 
     /**
-     * Játékos betöltése.
+     * Új játékos hozzáadása a többi játékoshoz.
      *
-     * @param player {@code player} a játékos akinek az adati vissza lesznek töltve.
-     * @return Visszaaddja a játékost, ha szerepel.
+     * @param player új játékos objektum.
+     */
+    public void New(Player player){
+        List<Player> tmp_player = this.getPlayers();
+        tmp_player.add(player);
+        this.setPlayers(tmp_player);
+        Write();
+        Logger.info("New element added to {}", PLAYERS);
+    }
+
+    /**
+     * Ha játékos korábban játszott visszatölti a győzelmeinek számát.
+     *
+     * @param player a játékos.
+     * @return ha játékos játszott visszaadja a korábbi player adatait.
      */
     public Player Load(Player player){
-        PlayerController controller = new PlayerController();
-        try {
-            List<Player> players = controller.GetAll(Player.class, PLAYERS);
-            Player tmp = players.stream()
-                    .filter(player1 -> player1.getId().equals(player.getId()))
-                    .limit(1).findFirst().orElse(null);
-            if(tmp != null){
-                Logger.info("{} wins reloaded.", tmp.getName());
-                return tmp;
+        List<Player> tmp_player = (ArrayList) getPlayers();
+        for(Player p : tmp_player){
+            if(p.getId().equals(player.getId())){
+                return  p;
             }
-        } catch (IOException e) {
+        }
+        Logger.info("Player not found.");
+        return null;
+    }
+
+    /**
+     * Újra kiírja a listát a korábbi helyre.
+     *
+     */
+    private void Write(){
+        try {
+            Gson gson = new Gson();
+            JsonWriter writer = new JsonWriter(
+                    new FileWriter("target/classes/controllers/" + PLAYERS));
+            writer.setIndent("  ");
+            writer.beginArray();
+            this.getPlayers().stream()
+                    .forEach(element -> gson.toJson(element, Player.class ,writer));
+            writer.endArray();
+            writer.close();
+            Logger.info("Data has rewritten.");
+        } catch (IOException e){
             Logger.error("IO Exception:\t {}", e.getCause());
         }
-        Logger.warn("Player not found!");
-        return player;
+    }
+
+    /**
+     * Egy játékos adatainak frissítése.
+     *
+     * @param player a játékos akinek az adatai frissítve lesznek.
+     */
+    public void Update(Player player){
+        int counter = 0;
+        List<Player> tmp_player = (ArrayList) getPlayers();
+        for(Player p : tmp_player){
+            if(p.getId().equals(player.getId())){
+                tmp_player.set(counter, player);
+            }
+            counter++;
+        }
+        this.setPlayers(tmp_player);
+        Write();
+        Logger.info("{} pudated.", player.getName());
     }
 }

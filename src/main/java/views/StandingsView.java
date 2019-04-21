@@ -41,19 +41,13 @@ public class StandingsView extends Button {
             StandingsController standingsController
                     = new StandingsController();
             StandingsController standingsController1 = new StandingsController();
-            standingsController.Refresh();
-            try {
-                top = "";
-                List<Player> players = standingsController.GetAll(Player.class,
-                        StandingsController.STANDINGS);
-                players.stream().limit(5).forEach(p -> {
-                     top += (p.getName() + "\t" + "  " + p.getWins() + "\n");
+            standingsController.Update();
+            top = "";
+            List<Player> players = standingsController.getPlayers();
+            players.stream().limit(5).forEach(p -> {
+                top += (p.getName() + "\t" + "  " + p.getWins() + "\n");
 
-                });
-
-            } catch (IOException e) {
-                Logger.error("IO Exception:\t {}", e.getCause());
-            }
+            });
             dialog.getDialogPane().setContent(
                     new Label("" + top));
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);

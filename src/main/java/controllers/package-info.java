@@ -4,12 +4,10 @@
  *  <h2>GameController</h2>
  *  <p>A játékot vezérlő eljárások a győzelem és a döntetlen definiállása.</p>
  *
- *  <h2>GameDataController</h2>
+ *  <h2>DataController</h2>
  *  <p>A játékokat IO módon való kezelése. A jelenlegi játékokat updatel-i,
  *  míg a régebbi játékokat tárolja.</p>
  *
- *  <h2>IOCOntroller</h2>
- *  <p>az IO folyamatok definiállása és elérhetővé tétele a többi vezérlőnek.</p>
  *
  *  <h2>PlayerController</h2>
  *  <p>A játékos adatainak kezelése és tárolása a régebbi játékosok között.</p>
