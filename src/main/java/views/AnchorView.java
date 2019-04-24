@@ -1,6 +1,8 @@
 package views;
 
+import controllers.GameController;
 import controllers.TableController;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -42,7 +44,6 @@ public class AnchorView extends AnchorPane {
         Table table = new Table();
 
         tableController.create(table);
-
         TableView.create();
 
         FlowPane pane = new FlowPane();
@@ -58,11 +59,23 @@ public class AnchorView extends AnchorPane {
         StandingsView standingsView = new StandingsView();
         this.getChildren().addAll(standingsView);
 
+        Button btn_reset = new Button();
+        btn_reset.setText("Reset");
+        btn_reset.setPrefSize(150,50);
+        btn_reset.setLayoutX(650);
+        btn_reset.setLayoutY(500);
+        btn_reset.setOnMouseClicked(t -> {
+            TableView.Reset(table);
+        });
+        this.getChildren().addAll(btn_reset);
+
         PlayerView.Init();
         this.getChildren().addAll(PlayerView.P1_label,
                 PlayerView.P2_label, PlayerView.Stat);
 
     }
+
+
 
     /**
      * Klikk esemény során lehívott metódus, ami elindítja

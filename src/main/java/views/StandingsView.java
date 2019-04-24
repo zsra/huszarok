@@ -29,10 +29,9 @@ public class StandingsView extends Button {
     public StandingsView(){
         Logger.info("Standings dialog called.");
         this.setText("Standings");
-        this.minHeight(40);
-        this.minWidth(100);
-        this.setLayoutX(690);
-        this.setLayoutY(500);
+        this.setPrefSize(150,50);
+        this.setLayoutX(650);
+        this.setLayoutY(550);
         this.setOnMouseClicked(t -> {
             Dialog<Void> dialog = new Dialog<>();
             dialog.setTitle("Standings");

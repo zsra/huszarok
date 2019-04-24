@@ -1,5 +1,7 @@
 package views;
 
+import controllers.GameController;
+import controllers.TableController;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -114,5 +116,19 @@ public class TableView {
                         "-fx-min-width: 60;-fx-min-height: 60;");
             }
         }
+    }
+
+    /**
+     * Újraindul a játék. Törli a tábla összes módosítását és nem nemmódosítja
+     * a tárolt adatokat.
+     *
+     * @param table {@code a tábla amin a módosítások bekövetkeznek.}
+     */
+    public static void Reset(Table table){
+        GameController.Turn = 0;
+        TableController tableController = new TableController();
+        tableController.create(table);
+        TableView.refresh(table);
+        Logger.warn("Table refreshed.");
     }
 }

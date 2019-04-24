@@ -1,8 +1,11 @@
 package views;
 
+import controllers.GameController;
+import controllers.TableController;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import models.Player;
+import models.Table;
 import org.pmw.tinylog.Logger;
 
 /**
