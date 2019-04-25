@@ -1,5 +1,8 @@
 package models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * A belső mátrix konstansai.
  */
@@ -8,26 +11,9 @@ public class Table {
     /**
      * Mátrix amin a műveletek végrehajtásra kerülnek.
      */
+    @Getter
+    @Setter
     private int Table[][];
-
-    /**
-     *
-     * a belső mátrix visszaadása.
-     * @return visszadja a mátrixot.
-     */
-    public int[][] getTable() {
-        return Table;
-    }
-
-    /**
-     * Egy táblán közvetlenül nem végzünk müveletett, helyete új
-     * mátrixot hozunk létre amit itt állítunk be.
-     *
-     * @param table {@code table} módosítások utáni tábla.
-     */
-    public void setTable(int[][] table) {
-        Table = table;
-    }
 
     /**
      * A mátrix mérete {@value #SIZE}.

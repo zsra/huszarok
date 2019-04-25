@@ -56,8 +56,13 @@ public class AnchorView extends AnchorPane {
                 pane.getChildren().addAll(TableView.fields[i][j]);
             }
         }
+
         StandingsView standingsView = new StandingsView();
-        this.getChildren().addAll(standingsView);
+        LoadSaveView load = new LoadSaveView(table);
+        SaveView save = new SaveView(table);
+
+        this.getChildren().addAll(save, load, standingsView);
+
 
         Button btn_reset = new Button();
         btn_reset.setText("Reset");
@@ -74,8 +79,6 @@ public class AnchorView extends AnchorPane {
                 PlayerView.P2_label, PlayerView.Stat);
 
     }
-
-
 
     /**
      * Klikk esemény során lehívott metódus, ami elindítja

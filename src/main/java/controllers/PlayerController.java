@@ -3,6 +3,8 @@ package controllers;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
+import lombok.Getter;
+import lombok.Setter;
 import models.Player;
 import org.pmw.tinylog.Logger;
 
@@ -35,26 +37,10 @@ public class PlayerController {
     public static Player P2;
 
     /**
-     * Visszaadja az összes játékost akik korábban játszott.
-     *
-     * @return Visszaadja az összes játékost akik korábban játszott.
-     */
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    /**
-     * Új listát állít be, ha megváltozna a tárolt adatok.
-     *
-     * @param players új lsita.
-     */
-    private void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    /**
      * Játékos konténer.
      */
+    @Getter
+    @Setter
     private List<Player> players;
 
     /**

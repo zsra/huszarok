@@ -1,5 +1,8 @@
 package models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
 /**
@@ -11,16 +14,20 @@ public class Player {
     /**
      * Játékos azonosító.
      */
+    @Getter
     private String Id;
 
     /**
      * A játékos egyedi a neve.
      */
+    @Getter
     private String Name;
 
     /**
      * A játékos összesen elért győzelmeinek a száma.
      */
+    @Getter
+    @Setter
     private int Wins;
 
     /**
@@ -33,34 +40,5 @@ public class Player {
         Name = name;
         Wins = wins;
         Id = UUID.randomUUID().toString();
-    }
-
-    /**
-     * @return Visszaadja a játékos azonosítóját.
-     */
-    public String getId() {
-        return Id;
-    }
-
-    /**
-     * @return Visszaadja a játékos nevét.
-     */
-    public String getName() {
-        return Name;
-    }
-
-    /**
-     * @return Visszaadja a játékos összesen megszerzett győzelmeinek számát.
-     */
-    public int getWins() {
-        return Wins;
-    }
-
-    /**
-     * Ha játékos nyer, akkor nőveli a győzelmeinek számát.
-     * @param wins {@code wins} frissített győzelmeknek a száma.
-     */
-    public void setWins(int wins) {
-        Wins = wins;
     }
 }

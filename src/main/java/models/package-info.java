@@ -9,8 +9,11 @@
  *  <p>Játékos nevét és az össz győzelmeinek számát tárolja egy id mezővel.</p>
  *
  *  <h2>Table</h2>
- *  <p>A belső mátrix ábrázolására felhasznált konstansok deklarációi.</p>
+ *  <p>A belső mátrix ábrázolására felhasznált konstansok deklarációim illetve
+ *  maga a belső mátrix.</p>
  *
+ *  <h2>Save</h2>
+ *  <p>A mentés létrehozzásához felhasznált model.</p>
  * @since 1.0
  * @author Zsupos Richárd András
  * @version 1.0

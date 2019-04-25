@@ -25,7 +25,7 @@ public class SaveController {
     /**
      * A mentések a {@value #SAVES}-ben található.
      */
-    private static final String SAVES  = "save.json";
+    private static final String SAVES  = "saves.json";
 
     /**
      * Konténer az elemek tárolásához.
@@ -119,13 +119,20 @@ public class SaveController {
         }
     }
 
-    public void Load(String name, Table table, TableController tableController){
+    /**
+     * Betöltés után felülírja az állást a betöltött játék értékeviel. Majd
+     * refresh-eli a table-t.
+     *
+     * @param name {@code name} input ablakon beírt azonososító ami már le lett tesztelve
+     *                         a validtiása.
+     * @param table {@code table} a tábla ami firssítve lesz.
+     */
+    public void Load(String name, Table table){
         SaveController saveController = new SaveController();
         Save save = saveController.getSaveById(name);
         GameController.Turn = save.getTurn();
         DataController.Session = save.getGame();
         table.setTable(save.getTable());
-        tableController.create(table);
         TableView.refresh(table);
     }
 }

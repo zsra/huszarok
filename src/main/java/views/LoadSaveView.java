@@ -21,13 +21,13 @@ public class LoadSaveView extends Button {
      * az alapján fogja visszatölteni a mentést.
      *
      * @param table {@code table} a tábla a modósításhoz.
-     * @param tableController {@code tableController} a controller meghívása.
      */
-    public LoadSaveView(Table table, TableController tableController){
+    public LoadSaveView(Table table){
+        this.setText("Load");
         this.setPrefSize(150,50);
         this.setLayoutX(650);
-        this.setLayoutY(550);
-        this.setOnMouseClicked(t -> {Load(table, tableController);});
+        this.setLayoutY(400);
+        this.setOnMouseClicked(t -> {Load(table);});
     }
 
     /**
@@ -35,9 +35,8 @@ public class LoadSaveView extends Button {
      * betöltést kezdeményez.
      *
      * @param table {@code table} a tábla a modósításhoz.
-     * @param tableController {@code tableController} a controller meghívása.
      */
-    public void Load(Table table, TableController tableController){
+    public void Load(Table table){
         TextInputDialog dialog = new TextInputDialog("Load saves");
         dialog.setTitle("Load Game");
         dialog.setContentText("Save Id:");
@@ -50,7 +49,7 @@ public class LoadSaveView extends Button {
                 alert.setHeaderText("Invalid save name.");
                 Logger.warn("Invalid save name.");
             } else {
-                saveController.Load(name, table, tableController);
+                saveController.Load(name, table);
                 UpdateGUI();
             }
         });

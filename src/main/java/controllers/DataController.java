@@ -3,6 +3,8 @@ package controllers;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
+import lombok.Getter;
+import lombok.Setter;
 import models.Game;
 import org.pmw.tinylog.Logger;
 
@@ -37,26 +39,10 @@ public class DataController {
     }
 
     /**
-     * Visszaadja az összes eddig lejátoszott játékot.
-     *
-     * @return Visszaadja az összes eddig lejátoszott játékot.
-     */
-    public List<Game> getGames() {
-        return games;
-    }
-
-    /**
-     * Ha módusítjuk egy játékot újraírjuk a resource-t.
-     *
-     * @param games a játékok listája.
-     */
-    private void setGames(List<Game> games) {
-        this.games = games;
-    }
-
-    /**
      * Játékokat tároló konténer.
      */
+    @Getter
+    @Setter
     private List<Game> games;
 
     /**

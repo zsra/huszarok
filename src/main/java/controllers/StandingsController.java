@@ -3,6 +3,8 @@ package controllers;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
+import lombok.Getter;
+import lombok.Setter;
 import models.Player;
 import org.pmw.tinylog.Logger;
 
@@ -27,26 +29,10 @@ public class StandingsController {
     public static final String STANDINGS = "top.json";
 
     /**
-     * Visszaadja a top 5 játékost.
-     *
-     * @return Visszaadja a top 5 játékost.
-     */
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    /**
-     * Új listát állít be, ha megváltozna a tárolt adatok.
-     *
-     * @param players új lista.
-     */
-    private void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    /**
      * top 5 játékost tároló konténer.
      */
+    @Getter
+    @Setter
     private List<Player> players;
 
     /**

@@ -21,6 +21,9 @@
  *  TableView leképezi a grafkus felülett. A matematikai műveletek
  *  itt zajlanak.</p>
  *
+ *  <h2>SaveController</h2>
+ *  <p>A mentés funkcióit tartalmazza, olvassa a mentés file-t és a table vezérlőt frissíti.</p>
+ *
  * @since 1.0
  * @author Zsupos Richárd András
  * @version 1.0

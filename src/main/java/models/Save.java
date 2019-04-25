@@ -1,49 +1,54 @@
 package models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
+/**
+ * Mentés objektum a mentés készítéséhez.
+ */
 public class Save {
 
+    /**
+     * Mentés azonosítója ami alapján visszatöltés
+     * történik.
+     */
+    @Getter
     private String id;
 
+    /**
+     * A tábla aktluális állása ami elmentésre kerül.
+     */
+    @Getter
+    @Setter
     private int[][] table;
 
+    /**
+     * Mentés elött lejátszott körök száma.
+     */
+    @Getter
     private int turn;
 
+    /**
+     * Játék információk, állás, jáékosok.
+     */
+    @Getter
     private Game game;
 
-    public int getTurn() {
-        return turn;
-    }
-
-    public void setTurn(int turn) {
-        this.turn = turn;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
+    /**
+     * Mentés konstruktor. A mentés során elmentésre kerülnek
+     * azok az elemek ami ahhoz szükséges, hogy vissza lehessen
+     * tölteni.
+     *
+     * @param table {@code table} a tábla ami mentésre kerül.
+     * @param turn {@code turn} a aktuális kör száma.
+     * @param game {@code game} a aktuális játék.
+     */
     public Save(int[][] table, int turn, Game game) {
         this.id = UUID.randomUUID().toString();
         this.table = table;
         this.turn = turn;
         this.game = game;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public int[][] getTable() {
-        return table;
-    }
-
-    public void setTable(int[][] table) {
-        this.table = table;
     }
 }

@@ -1,5 +1,8 @@
 package models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
 /**
@@ -10,26 +13,33 @@ public class Game {
     /**
      * Játék azonosító.
      */
+    @Getter
     private String id;
 
     /**
      *  Player1 adatai.
      */
+    @Getter
     private Player player1;
 
     /**
      *  Player2 adatai.
      */
+    @Getter
     private Player player2;
 
     /**
      *  Player1 aktuális játékban lejátszott győzelmeinek száma.
      */
+    @Getter
+    @Setter
     private int player1_wins;
 
     /**
      *  Player2 aktuális játékban lejátszott győzelmeinek száma.
      */
+    @Getter
+    @Setter
     private int player2_wins;
 
     /**
@@ -46,58 +56,5 @@ public class Game {
         this.player1_wins = player1_wins;
         this.player2_wins = player2_wins;
         this.id = UUID.randomUUID().toString();
-    }
-
-    /**
-     * @return Visszaadja az első játékos Player objektumot.
-     */
-    public Player getPlayer1() {
-        return player1;
-    }
-
-    /**
-     * @return Visszaadja a második játékos Player objektumot.
-     */
-    public Player getPlayer2() {
-        return player2;
-    }
-
-    /**
-     * @return Visszaadja az első játékos aktuális győzelmeit.
-     */
-    public int getPlayer1_wins() {
-        return player1_wins;
-    }
-
-    /**
-     * Első játékos győzelmeinek számának növelése.
-     *
-     * @param player1_wins {@code player1_wins} új győzelem hozzáadása.
-     */
-    public void setPlayer1_wins(int player1_wins) {
-        this.player1_wins = player1_wins;
-    }
-
-    /**
-     * @return Visszaadja a második játékos aktuális győzelmeit.
-     */
-    public int getPlayer2_wins() {
-        return player2_wins;
-    }
-
-    /**
-     * Második játékos győzelmeinek számának növelése.
-     *
-     * @param player2_wins {@code player2_wins} új győzelem hozzáadása.
-     */
-    public void setPlayer2_wins(int player2_wins) {
-        this.player2_wins = player2_wins;
-    }
-
-    /**
-     * @return Visszaadja a játék azonosítóját.
-     */
-    public String getId() {
-        return id;
     }
 }
