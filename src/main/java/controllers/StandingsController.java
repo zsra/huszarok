@@ -55,7 +55,7 @@ public class StandingsController {
     }
 
     /**
-     * Kiszedi a top 5 játékost a players.json-ből
+     * Kiszedi a top 5 játékost a players.json-ből.
      */
     public void Update(){
         PlayerController controller = new PlayerController();
