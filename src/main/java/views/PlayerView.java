@@ -73,6 +73,11 @@ public class PlayerView {
     }
 
     /**
+     * Számontartja, hogy az első játékos elsőnek lépett be vagy nem.
+     */
+    private static boolean isNewP1 = false;
+
+    /**
      * Megjeleníti a dialog ablakokat, ahol bekérésre kerülnek a két játékos
      * neve, elindít egy új session-t és, ha játékos korábban játszott
      * betölti a név alapján a győzelminek számát. {@link #setPlayers()} hívja meg.
@@ -90,7 +95,7 @@ public class PlayerView {
                 P1 = new Player(name, 0);
                 if(playerController.isNewPlayer(P1)){
                     Logger.info("New Player.");
-                    playerController.New(P1);
+                    isNewP1 = true;
 
                 } else {
                     P1 = playerController.Load(P1);
@@ -103,6 +108,10 @@ public class PlayerView {
 
                 } else {
                     P2 = playerController.Load(P2);
+                }
+                if(isNewP1){
+                    playerController.New(P1);
+                    isNewP1 = false;
                 }
                 DataController.Session = new Game(P1, P2, 0, 0);
                 DataController gameDataController = new DataController();

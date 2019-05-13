@@ -70,7 +70,7 @@ public class PlayerController {
      */
     public boolean isNewPlayer(Player player){
         Player result = this.getPlayers().stream()
-                .filter(player1 -> player1.getId().equals(player.getId()))
+                .filter(player1 -> player1.getName().equals(player.getName()))
                 .findFirst().orElse(null);
         if (result == null){
             return true;
@@ -85,7 +85,7 @@ public class PlayerController {
      * @param player új játékos objektum.
      */
     public void New(Player player){
-        List<Player> tmp_player = this.getPlayers();
+        List<Player> tmp_player = (ArrayList) this.getPlayers();
         tmp_player.add(player);
         this.setPlayers(tmp_player);
         Write();
